@@ -14,38 +14,15 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int	ft_atoi(const char *nptr)
+
+void	sendbits(int pid, int c)
 {
 	int	i;
-	int	neg;
-	int	temp;
+	int	bit;
 
 	i = 0;
-	neg = 1;
-	temp = 0;
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
-		i++;
-	if (nptr[i] == '+' || nptr[i] == '-')
-	{
-		if (nptr[i] == '-')
-			neg *= -1;
-		i++;
-	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		temp = (nptr[i] - '0') + (temp * 10);
-		i++;
-	}
-	return (temp * neg);
-}
+	bit =0;
 
-// --------------------------------------------------------
-
-void	print_bits(int pid, int num)
-{
-	int	i;
-
-	i = 0;
 	while (i < 8)
 	{
 		if (num & (128 >> i) == 1)
@@ -54,43 +31,37 @@ void	print_bits(int pid, int num)
 				kill(pid, SIGUSR2);
 		i++;
 	}
+
+	if (c == 1)
+		kill(pid, );
+	else if (c == 0)
+		kill(pid, );
 }
 
-//----------------------------------------------------------
 
-
-
-//                 65
-void	sendchar(int c, int pid)
-{
-	while (c >= 10)
-	{
-		c -= 10;
-		kill(pid, SIGUSR2);
-		usleep(700);
-	}
-	while (c > 0)
-	{
-		c--;
-		kill(pid, SIGUSR1);
-		usleep(700);
-	}
-	kill(pid, SIGINT);
-	usleep(700);
-}
-
-// ./a.out 93993 a
 int main(int ac, char **av)
 {
-	int	pid;
-	pid = ft_atoi(av[1]);
-	int	i;
-	i = 0;
-	while (av[2][i])
+	if (ac == 3)
 	{
-		 sendchar(av[2][i], pid);
-		 i++;
+		int	pidsize;
+		int	pid;
+		int	i;
+		
+		pidsize = 0;
+		while (av[1][i])
+			pidsize++;
+		if (pidsize != 6)
+		{
+			ft_error();
+			return (0);
+		}
+		i = 0;
+		pid = ft_atoi(av[1])
+		while (av[2][i])
+		{
+		 	sendbits(pid, av[2][i]);
+		 	i++;
+		}
+		return (0);
 	}
-
-	return (0);
 }
