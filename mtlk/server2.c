@@ -14,28 +14,29 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void	name(int sig)
-{
-	static int	letter;
+// put_message:
+// recebe um sinal
+// se aquele sinal for sg1 (1) ou sig (2)
+// coloca seus respectivos numeros como string em uma variavel static
+// usa atoi pra transformar ela em numero ascii
+// printa aquele caracter formado
 
-	if (sig == SIGUSR1)
-		letter += 1;
-	else if (sig == SIGUSR2)
-		letter += 10;
-	else if (sig == SIGINT)
-	{
-		write(1, &letter, 1);
-		letter = 0;
-	}
+// PROBLEMAS
+// tenho que fazer isso até 8 bits, e depois zerar minha variável static;
+
+
+void	put_message(int sig)
+{
+	static char	*c = 0;
+
+	if ()
 }
 
 int	main(void)
 {
-	printf("PID: [ %d ]\n", getpid());
-	signal(SIGINT, name);
-	signal(SIGUSR1, name);
-	signal(SIGUSR2, name);
-
+	printf("[PID: %d ]\n", getpid());
+	signal(SIGUSR1, put_message());
+	signal(SIGUSR2, put_message());
 	while (42)
 		;
 	return (0);
