@@ -37,6 +37,6 @@ int	main(void)
 	signal(SIGUSR1, put_message);
 	signal(SIGUSR2, put_message);
 	while (1)
-		;
+		usleep(200);
 	return (0);
 }
