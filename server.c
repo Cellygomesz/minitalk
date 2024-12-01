@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgomes-s <mgomes-s@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:17:59 by mgomes-s          #+#    #+#             */
-/*   Updated: 2024/11/28 15:33:29 by mgomes-s         ###   ########.fr       */
+/*   Updated: 2024/12/01 13:43:40 by mgomes-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 
-void	name(int sig)
+void	put_message(int sig)
 {
-	static int	letter;
+	static int	sizebit;
+	static int	caracter;
 
 	if (sig == SIGUSR1)
-		letter += 1;
-	else if (sig == SIGUSR2)
-		letter += 10;
-	else if (sig == SIGINT)
+		caracter |= (00000001 << sizebit);
+	sizebit++;
+	if (sizebit == 8)
 	{
-		write(1, &letter, 1);
-		letter = 0;
+		printf("%c", caracter);
+		sizebit = 0;
+		caracter = 0;
 	}
 }
 
 int	main(void)
 {
-	printf("PID: [ %d ]\n", getpid());
-	signal(SIGINT, name);
-	signal(SIGUSR1, name);
-	signal(SIGUSR2, name);
-
-	while (42)
+	printf("[PID: %d ]\n", getpid());
+	signal(SIGUSR1, put_message);
+	signal(SIGUSR2, put_message);
+	while (1)
 		;
 	return (0);
 }

@@ -12,9 +12,10 @@
 
 #include <signal.h>
 #include <unistd.h>
-#include <stdio.h>
 
-int	ft_atoi(const char *nptr)
+// ------------------------- utils ----------------------------
+
+static int	ft_atoi(const char *nptr)
 {
 	int	i;
 	int	neg;
@@ -39,58 +40,49 @@ int	ft_atoi(const char *nptr)
 	return (temp * neg);
 }
 
-// --------------------------------------------------------
+static void	ft_error(void)
+{
+	write(2, "Incorrect usage! [corret: ./client <PID> phrase ]\n", 50);
+}
 
-void	print_bits(int pid, int num)
+// ------------------------------------------------------------
+
+static void	send_message(int pid, int c)
 {
 	int	i;
 
 	i = 0;
 	while (i < 8)
 	{
-		if (num & (128 >> i) == 1)
+		if ((c & (00000001 >> i)) != 0)
 			kill(pid, SIGUSR1);
 		else
-				kill(pid, SIGUSR2);
+			kill(pid, SIGUSR2);
+		usleep(200);
 		i++;
 	}
 }
 
-//----------------------------------------------------------
-
-
-
-//                 65
-void	sendchar(int c, int pid)
+int	main(int ac, char **av)
 {
-	while (c >= 10)
+	if (ac == 3)
 	{
-		c -= 10;
-		kill(pid, SIGUSR2);
-		usleep(700);
-	}
-	while (c > 0)
-	{
-		c--;
-		kill(pid, SIGUSR1);
-		usleep(700);
-	}
-	kill(pid, SIGINT);
-	usleep(700);
-}
+		int	pid;
+		int	i;
 
-// ./a.out 93993 a
-int main(int ac, char **av)
-{
-	int	pid;
-	pid = ft_atoi(av[1]);
-	int	i;
-	i = 0;
-	while (av[2][i])
-	{
-		 sendchar(av[2][i], pid);
-		 i++;
+		pid = ft_atoi(av[1]);
+		i = 0;
+		while (av[2][i])
+		{
+			send_message(pid, av[2][i]);
+		 	i++;
+		}
+		send_message(pid, '\0');
 	}
-
+	else
+	{
+		ft_error();
+		return (1);
+	}
 	return (0);
 }

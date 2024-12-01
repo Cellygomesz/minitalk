@@ -1,4 +1,0 @@
-Anotações sobre o projeto:
-
-SIGUSR1 == 1
-SIGUSR2 == 0
