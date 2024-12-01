@@ -54,7 +54,7 @@ static void	send_message(int pid, int c)
 	i = 0;
 	while (i < 8)
 	{
-		if ((c & (00000001 >> i)) != 0)
+		if ((c & (00000001 << i)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
@@ -75,9 +75,11 @@ int	main(int ac, char **av)
 		while (av[2][i])
 		{
 			send_message(pid, av[2][i]);
+			usleep(200);
 		 	i++;
 		}
 		send_message(pid, '\0');
+		usleep(200);
 	}
 	else
 	{
