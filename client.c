@@ -6,14 +6,12 @@
 /*   By: mgomes-s <mgomes-s@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:14:15 by mgomes-s          #+#    #+#             */
-/*   Updated: 2024/11/28 18:18:47 by mgomes-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:57:11 by mgomes-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
-
-// ------------------------- utils ----------------------------
 
 static int	ft_atoi(const char *nptr)
 {
@@ -45,7 +43,11 @@ static void	ft_error(void)
 	write(2, "Incorrect usage! [corret: ./client <PID> phrase ]\n", 50);
 }
 
-// ------------------------------------------------------------
+static void	confirmation(int signum)
+{
+	if (signum == SIGUSR1)
+		write(1, "message sent!\n", 14);
+}
 
 static void	send_message(int pid, int c)
 {
@@ -58,28 +60,27 @@ static void	send_message(int pid, int c)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(200);
+		usleep(500);
 		i++;
 	}
 }
 
 int	main(int ac, char **av)
 {
+	int	i;
+	int	pid;
+
 	if (ac == 3)
 	{
-		int	pid;
-		int	i;
-
 		pid = ft_atoi(av[1]);
 		i = 0;
+		signal(SIGUSR1, &confirmation);
 		while (av[2][i])
 		{
 			send_message(pid, av[2][i]);
-			usleep(200);
-		 	i++;
+			i++;
 		}
 		send_message(pid, '\0');
-		usleep(200);
 	}
 	else
 	{

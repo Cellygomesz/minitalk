@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgomes-s <mgomes-s@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 14:14:15 by mgomes-s          #+#    #+#             */
-/*   Updated: 2024/11/28 18:18:47 by mgomes-s         ###   ########.fr       */
+/*   Created: 2024/12/03 11:49:30 by mgomes-s          #+#    #+#             */
+/*   Updated: 2024/12/03 12:00:59 by mgomes-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
-#include <stdio.h>
 
-int	ft_atoi(const char *nptr)
+static int	ft_atoi(const char *nptr)
 {
 	int	i;
 	int	neg;
@@ -39,58 +38,54 @@ int	ft_atoi(const char *nptr)
 	return (temp * neg);
 }
 
-// --------------------------------------------------------
+static void	ft_error(void)
+{
+	write(2, "Incorrect usage! [corret: ./client <PID> phrase ]\n", 50);
+}
 
-void	print_bits(int pid, int num)
+static void	confirmation(int signum)
+{
+	if (signum == SIGUSR1)
+		write(1, "message sent!\n", 14);
+}
+
+static void	send_message(int pid, int c)
 {
 	int	i;
 
 	i = 0;
 	while (i < 8)
 	{
-		if (num & (128 >> i) == 1)
+		if ((c & (00000001 << i)) != 0)
 			kill(pid, SIGUSR1);
 		else
-				kill(pid, SIGUSR2);
+			kill(pid, SIGUSR2);
+		usleep(500);
 		i++;
 	}
 }
 
-//----------------------------------------------------------
-
-
-
-//                 65
-void	sendchar(int c, int pid)
+int	main(int ac, char **av)
 {
-	while (c >= 10)
-	{
-		c -= 10;
-		kill(pid, SIGUSR2);
-		usleep(700);
-	}
-	while (c > 0)
-	{
-		c--;
-		kill(pid, SIGUSR1);
-		usleep(700);
-	}
-	kill(pid, SIGINT);
-	usleep(700);
-}
-
-// ./a.out 93993 a
-int main(int ac, char **av)
-{
-	int	pid;
-	pid = ft_atoi(av[1]);
 	int	i;
-	i = 0;
-	while (av[2][i])
-	{
-		 sendchar(av[2][i], pid);
-		 i++;
-	}
+	int	pid;
 
+	if (ac == 3)
+	{
+		pid = ft_atoi(av[1]);
+		i = 0;
+		signal(SIGUSR1, &confirmation);
+		while (av[2][i])
+		{
+			send_message(pid, av[2][i]);
+			i++;
+		}
+		send_message(pid, '\0');
+	}
+	else
+	{
+		ft_error();
+		return (1);
+	}
 	return (0);
 }
