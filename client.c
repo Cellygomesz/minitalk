@@ -6,7 +6,7 @@
 /*   By: mgomes-s <mgomes-s@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:14:15 by mgomes-s          #+#    #+#             */
-/*   Updated: 2024/12/03 11:57:11 by mgomes-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:02:57 by mgomes-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	send_message(int pid, int c)
 	i = 0;
 	while (i < 8)
 	{
-		if ((c & (00000001 << i)) != 0)
+		if ((c & (0b00000001 << i)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);

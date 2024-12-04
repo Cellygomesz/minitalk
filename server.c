@@ -6,7 +6,7 @@
 /*   By: mgomes-s <mgomes-s@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:17:59 by mgomes-s          #+#    #+#             */
-/*   Updated: 2024/12/03 12:00:00 by mgomes-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:13:50 by mgomes-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	put_message(int sig, siginfo_t	*siginfo, void *context)
 
 	(void)context;
 	if (sig == SIGUSR1)
-		caracter |= (00000001 << sizebit);
+		caracter |= (0b00000001 << sizebit);
 	sizebit++;
 	if (sizebit == 8)
 	{
@@ -63,6 +63,6 @@ int	main(void)
 	sigaction(SIGUSR1, &query_action, NULL);
 	sigaction(SIGUSR2, &query_action, NULL);
 	while (1)
-		;
+		pause();
 	return (0);
 }
